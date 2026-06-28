@@ -3,63 +3,42 @@ import '../theme/app_colors.dart';
 import '../theme/app_text_style.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/gradient_button.dart';
-import '../widgets/social_button.dart';
-import 'forgot_password_screen.dart';
-import 'signup_screen.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class SignupScreen extends StatefulWidget {
+  const SignupScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignupScreen> createState() => _SignupScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SignupScreenState extends State<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   
   bool _isPasswordObscured = true;
   bool _isLoading = false;
-  bool _isGoogleLoading = false;
-  bool _isFacebookLoading = false;
 
   @override
   void dispose() {
+    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
-  Future<void> _handleLogin() async {
+  Future<void> _handleSignup() async {
     if (_formKey.currentState!.validate()) {
       setState(() => _isLoading = true);
       await Future.delayed(const Duration(seconds: 2)); // Simulate API
       if (mounted) {
         setState(() => _isLoading = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Welcome back, ${_emailController.text}!')),
+          const SnackBar(content: Text('Account created successfully!')),
         );
+        Navigator.pop(context); // Return to login
       }
-    }
-  }
-
-  Future<void> _handleSocialLogin(String provider) async {
-    setState(() {
-      if (provider == 'google') _isGoogleLoading = true;
-      if (provider == 'facebook') _isFacebookLoading = true;
-    });
-    
-    await Future.delayed(const Duration(seconds: 2)); // Simulate API
-    
-    if (mounted) {
-      setState(() {
-        _isGoogleLoading = false;
-        _isFacebookLoading = false;
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Logged in with $provider')),
-      );
     }
   }
 
@@ -82,26 +61,15 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
           Positioned(
-            top: height * 0.14,
-            left: 0,
-            right: 0,
-            child: Center(
-              child: Text(
-                'DeshExplorer',
-                style: AppTextStyle.title.copyWith(
-                  shadows: [
-                    Shadow(
-                      color: Colors.black.withOpacity(0.3),
-                      blurRadius: 15,
-                      offset: const Offset(0, 5),
-                    ),
-                  ],
-                ),
-              ),
+            top: 40,
+            left: 16,
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back_ios, color: AppColors.white),
+              onPressed: () => Navigator.pop(context),
             ),
           ),
           Positioned.fill(
-            top: height * 0.32,
+            top: height * 0.25,
             child: Container(
               decoration: BoxDecoration(
                 color: AppColors.white,
@@ -129,10 +97,17 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('Welcome Back', style: AppTextStyle.header),
+                        const Text('Create Account', style: AppTextStyle.header),
                         const SizedBox(height: 8),
-                        const Text('Sign in to continue your journey', style: AppTextStyle.subtitle),
+                        const Text('Start your exploration today', style: AppTextStyle.subtitle),
                         const SizedBox(height: 32),
+                        CustomTextField(
+                          controller: _nameController,
+                          hintText: 'Full Name',
+                          prefixIcon: Icons.person_outline_rounded,
+                          validator: (value) => value!.isEmpty ? 'Please enter your name' : null,
+                        ),
+                        const SizedBox(height: 16),
                         CustomTextField(
                           controller: _emailController,
                           hintText: 'Email address',
@@ -149,66 +124,23 @@ class _LoginScreenState extends State<LoginScreen> {
                           onSuffixTap: () => setState(() => _isPasswordObscured = !_isPasswordObscured),
                           validator: (value) => value!.length < 6 ? 'Password must be at least 6 characters' : null,
                         ),
-                        const SizedBox(height: 12),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: TextButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => const ForgotPasswordScreen()),
-                              );
-                            },
-                            child: const Text('Forgot Password?', style: AppTextStyle.linkText),
-                          ),
-                        ),
-                        const SizedBox(height: 32),
+                        const SizedBox(height: 40),
                         GradientButton(
-                          text: 'Sign In',
+                          text: 'Sign Up',
                           isLoading: _isLoading,
-                          onPressed: _handleLogin,
-                        ),
-                        const SizedBox(height: 32),
-                        Row(
-                          children: const [
-                            Expanded(child: Divider(color: AppColors.border, thickness: 1)),
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 16),
-                              child: Text('OR', style: TextStyle(color: AppColors.textGrey, fontWeight: FontWeight.w600)),
-                            ),
-                            Expanded(child: Divider(color: AppColors.border, thickness: 1)),
-                          ],
-                        ),
-                        const SizedBox(height: 32),
-                        SocialButton(
-                          text: 'Continue with Google',
-                          iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/120px-Google_%22G%22_logo.svg.png',
-                          isLoading: _isGoogleLoading,
-                          onPressed: () => _handleSocialLogin('google'),
-                        ),
-                        const SizedBox(height: 16),
-                        SocialButton(
-                          text: 'Continue with Facebook',
-                          iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/2021_Facebook_icon.svg/120px-2021_Facebook_icon.svg.png',
-                          isLoading: _isFacebookLoading,
-                          onPressed: () => _handleSocialLogin('facebook'),
+                          onPressed: _handleSignup,
                         ),
                         const SizedBox(height: 40),
                         Center(
                           child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => const SignupScreen()),
-                              );
-                            },
+                            onTap: () => Navigator.pop(context),
                             child: RichText(
                               text: const TextSpan(
-                                text: 'Don\'t have an account? ',
+                                text: 'Already have an account? ',
                                 style: TextStyle(color: AppColors.textDark, fontSize: 15),
                                 children: [
                                   TextSpan(
-                                    text: 'Sign Up',
+                                    text: 'Sign In',
                                     style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold),
                                   ),
                                 ],

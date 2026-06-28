@@ -15,7 +15,7 @@ class DeshExplorerApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
-        fontFamily: 'Inter', // Optional, standard modern sans-serif
+        fontFamily: 'Inter',
         scaffoldBackgroundColor: const Color(0xFF18D2D1),
       ),
       home: const LoginScreen(),
