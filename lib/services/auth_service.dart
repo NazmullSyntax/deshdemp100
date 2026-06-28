@@ -4,9 +4,9 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  
-  // Use the singleton instance instead of the removed unnamed constructor
-  final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: <String>['email', 'profile'],
+  );
 
   // 1. Sign In with Email
   Future<User?> signInWithEmail(String email, String password) async {
@@ -46,22 +46,16 @@ class AuthService {
   // 4. Google Sign In
   Future<User?> signInWithGoogle() async {
     try {
-      // Initialization is mandatory in v7.0.0+ before authenticating
-      await _googleSignIn.initialize();
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
+        return null;
+      }
 
-      // authenticate() throws exceptions if it fails (like user cancellation). 
-      // It no longer returns a nullable object, so we declare it as non-nullable.
-      final GoogleSignInAccount googleUser = await _googleSignIn.authenticate();
-
-      // authentication is now synchronous in v7.0.0+ (removed 'await')
-      final GoogleSignInAuthentication googleAuth = googleUser.authentication;
-      
-      // Explicitly request authorization scopes to get the accessToken
-      // Removed the unnecessary null-aware operator '?.'
-      final authorizedUser = await googleUser.authorizationClient.authorizeScopes(['email', 'profile']);
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
 
       final AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: authorizedUser.accessToken, // Removed '?.', guaranteed non-null
+        accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
