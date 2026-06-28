@@ -11,7 +11,7 @@ class TravelTipsBanner extends StatelessWidget {
       height: 140,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24),
-        gradient: LinearGradient(colors: [const Color(0xFFE0F7FA), const Color(0xFFB2EBF2).withOpacity(0.5)]),
+        gradient: LinearGradient(colors: [const Color(0xFFE0F7FA), const Color(0xFFB2EBF2).withAlpha(128)]),
       ),
       child: Stack(
         children: [

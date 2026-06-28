@@ -13,8 +13,8 @@ class CategoryCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: color.withOpacity(isActive ? 0.5 : 0.2), width: 1.5),
-        boxShadow: isActive ? [BoxShadow(color: color.withOpacity(0.15), blurRadius: 15, offset: const Offset(0, 8))] : [],
+        border: Border.all(color: color.withAlpha(isActive ? (0.5 * 255).round() : (0.2 * 255).round()), width: 1.5),
+        boxShadow: isActive ? [BoxShadow(color: color.withAlpha((0.15 * 255).round()), blurRadius: 15, offset: const Offset(0, 8))] : [],
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

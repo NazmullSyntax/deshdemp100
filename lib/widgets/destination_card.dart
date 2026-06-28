@@ -13,13 +13,13 @@ class DestinationCard extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24),
         image: DecorationImage(image: NetworkImage(imageUrl), fit: BoxFit.cover),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 15, offset: const Offset(0, 8))],
+        boxShadow: const [BoxShadow(color: Color.fromRGBO(0, 0, 0, 0.1), blurRadius: 15, offset: Offset(0, 8))],
       ),
       child: Stack(
         children: [
           Positioned(bottom: 0, left: 0, right: 0, height: 100, child: Container(
-            decoration: BoxDecoration(borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
-            gradient: LinearGradient(begin: Alignment.bottomCenter, end: Alignment.topCenter, colors: [Colors.black.withOpacity(0.8), Colors.transparent])),
+            decoration: const BoxDecoration(borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
+            gradient: LinearGradient(begin: Alignment.bottomCenter, end: Alignment.topCenter, colors: [Color.fromRGBO(0, 0, 0, 0.8), Colors.transparent])),
           )),
           Positioned(top: 16, right: 16, child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -32,7 +32,7 @@ class DestinationCard extends StatelessWidget {
           Positioned(bottom: 16, left: 16, child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(title, style: const TextStyle(color: AppColors.white, fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 4),
-            Text(subtitle, style: TextStyle(color: AppColors.white.withOpacity(0.9), fontSize: 14)),
+            Text(subtitle, style: TextStyle(color: AppColors.white.withAlpha(230), fontSize: 14)),
           ])),
         ],
       ),

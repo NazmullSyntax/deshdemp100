@@ -217,8 +217,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           onPressed: _handleLogin,
                         ),
                         const SizedBox(height: 32),
-                        Row(
-                          children: const [
+                        const Row(
+                          children: [
                             Expanded(child: Divider(color: AppColors.border, thickness: 1)),
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 16),
