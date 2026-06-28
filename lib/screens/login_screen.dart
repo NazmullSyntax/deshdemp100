@@ -71,14 +71,25 @@ class _LoginScreenState extends State<LoginScreen> {
       backgroundColor: AppColors.background,
       body: Stack(
         children: [
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            height: height * 0.45,
-            child: Image.network(
-              'https://images.unsplash.com/photo-1542401886-65d6c61de115?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
+          Positioned.fill(
+            child: Image.asset(
+              'assets/cover.png',
               fit: BoxFit.cover,
+            ),
+          ),
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.black.withValues(alpha: 89),
+                    Colors.black.withValues(alpha: 31),
+                    Colors.transparent,
+                  ],
+                ),
+              ),
             ),
           ),
           Positioned(
@@ -91,7 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 style: AppTextStyle.title.copyWith(
                   shadows: [
                     Shadow(
-                      color: Colors.black.withOpacity(0.3),
+                      color: Colors.black.withValues(alpha: 77),
                       blurRadius: 15,
                       offset: const Offset(0, 5),
                     ),
@@ -111,7 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.black.withValues(alpha: 26),
                     blurRadius: 20,
                     offset: const Offset(0, -5),
                   ),
