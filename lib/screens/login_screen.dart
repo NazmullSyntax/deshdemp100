@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../services/auth_service.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_style.dart';
 import '../widgets/custom_text_field.dart';
@@ -18,6 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final AuthService _authService = AuthService();
   
   bool _isPasswordObscured = true;
   bool _isLoading = false;
@@ -34,12 +36,25 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _handleLogin() async {
     if (_formKey.currentState!.validate()) {
       setState(() => _isLoading = true);
-      await Future.delayed(const Duration(seconds: 2)); // Simulate API
-      if (mounted) {
-        setState(() => _isLoading = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Welcome back, ${_emailController.text}!')),
+      try {
+        await _authService.signInWithEmail(
+          _emailController.text.trim(),
+          _passwordController.text.trim(),
         );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Login Successful!')),
+          );
+          
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(e.toString()), backgroundColor: Colors.red),
+          );
+        }
+      } finally {
+        if (mounted) setState(() => _isLoading = false);
       }
     }
   }
@@ -50,16 +65,31 @@ class _LoginScreenState extends State<LoginScreen> {
       if (provider == 'facebook') _isFacebookLoading = true;
     });
     
-    await Future.delayed(const Duration(seconds: 2)); // Simulate API
-    
-    if (mounted) {
-      setState(() {
-        _isGoogleLoading = false;
-        _isFacebookLoading = false;
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Logged in with $provider')),
-      );
+    try {
+      if (provider == 'google') {
+        await _authService.signInWithGoogle();
+      } else if (provider == 'facebook') {
+        await _authService.signInWithFacebook();
+      }
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Social Login Successful!')),
+        );
+        // TODO: Navigator.pushReplacement to your Home Screen
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString()), backgroundColor: Colors.red),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isGoogleLoading = false;
+          _isFacebookLoading = false;
+        });
+      }
     }
   }
 
