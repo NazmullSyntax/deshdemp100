@@ -7,6 +7,9 @@ class CustomTextField extends StatelessWidget {
   final IconData prefixIcon;
   final IconData? suffixIcon;
   final bool obscureText;
+  final TextEditingController? controller;
+  final String? Function(String?)? validator;
+  final VoidCallback? onSuffixTap;
 
   const CustomTextField({
     super.key,
@@ -14,11 +17,16 @@ class CustomTextField extends StatelessWidget {
     required this.prefixIcon,
     this.suffixIcon,
     this.obscureText = false,
+    this.controller,
+    this.validator,
+    this.onSuffixTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: controller,
+      validator: validator,
       obscureText: obscureText,
       style: const TextStyle(color: AppColors.textDark, fontSize: 16),
       decoration: InputDecoration(
@@ -26,7 +34,10 @@ class CustomTextField extends StatelessWidget {
         hintStyle: AppTextStyle.subtitle,
         prefixIcon: Icon(prefixIcon, color: AppColors.primary, size: 24),
         suffixIcon: suffixIcon != null
-            ? Icon(suffixIcon, color: AppColors.textGrey, size: 24)
+            ? GestureDetector(
+                onTap: onSuffixTap,
+                child: Icon(suffixIcon, color: AppColors.textGrey, size: 24),
+              )
             : null,
         filled: true,
         fillColor: AppColors.white,
@@ -38,6 +49,14 @@ class CustomTextField extends StatelessWidget {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(color: Colors.redAccent, width: 1.5),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(color: Colors.redAccent, width: 1.5),
         ),
       ),
     );

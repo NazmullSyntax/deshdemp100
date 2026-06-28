@@ -5,11 +5,13 @@ import '../theme/app_text_style.dart';
 class GradientButton extends StatelessWidget {
   final VoidCallback onPressed;
   final String text;
+  final bool isLoading;
 
   const GradientButton({
     super.key,
     required this.onPressed,
     required this.text,
+    this.isLoading = false,
   });
 
   @override
@@ -19,21 +21,25 @@ class GradientButton extends StatelessWidget {
       height: 56,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
-        gradient: const LinearGradient(
-          colors: [AppColors.gradientLeft, AppColors.gradientRight],
+        gradient: LinearGradient(
+          colors: isLoading 
+              ? [AppColors.textGrey, AppColors.border] 
+              : [AppColors.gradientLeft, AppColors.gradientRight],
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.gradientRight.withOpacity(0.3),
-            blurRadius: 15,
-            offset: const Offset(0, 5),
-          )
-        ],
+        boxShadow: isLoading 
+            ? [] 
+            : [
+                BoxShadow(
+                  color: AppColors.gradientRight.withOpacity(0.3),
+                  blurRadius: 15,
+                  offset: const Offset(0, 5),
+                )
+              ],
       ),
       child: ElevatedButton(
-        onPressed: onPressed,
+        onPressed: isLoading ? null : onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
@@ -41,7 +47,16 @@ class GradientButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
           ),
         ),
-        child: Text(text, style: AppTextStyle.buttonText),
+        child: isLoading
+            ? const SizedBox(
+                height: 24,
+                width: 24,
+                child: CircularProgressIndicator(
+                  color: AppColors.white,
+                  strokeWidth: 2.5,
+                ),
+              )
+            : Text(text, style: AppTextStyle.buttonText),
       ),
     );
   }
